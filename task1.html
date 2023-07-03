@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    tr.blue {
+      background-color: blue;
+    }
+
+    tr.green {
+      background-color: green;
+    }
+  </style>
+</head>
+<body>
+  <table id="currency-table">
+    <tr>
+      <th>ID</th>
+      <th>Symbol</th>
+      <th>Name</th>
+    </tr>
+  </table>
+
+  <script>
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
+      .then(response => response.json())
+      .then(data => {
+        const currencyTable = document.getElementById('currency-table');
+
+        for (let i = 0; i < data.length; i++) {
+          const currency = data[i];
+          const row = document.createElement('tr');
+          const idCell = document.createElement('td');
+          const symbolCell = document.createElement('td');
+          const nameCell = document.createElement('td');
+
+          idCell.textContent = currency.id;
+          symbolCell.textContent = currency.symbol;
+          nameCell.textContent = currency.name;
+
+          row.appendChild(idCell);
+          row.appendChild(symbolCell);
+          row.appendChild(nameCell);
+
+          if (i < 5) {
+            row.classList.add('blue');
+          }
+
+          if (currency.symbol === 'usdt') {
+            row.classList.add('green');
+          }
+
+          currencyTable.appendChild(row);
+        }
+      })
+      .catch(error => console.error(error));
+  </script>
+</body>
+</html>
